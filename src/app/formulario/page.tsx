@@ -1,20 +1,40 @@
-import { InputText } from '@/components'
+'use client'
+
+import { InputText, Button } from '@/components'
 import { Template } from '@/components/Template'
+import Link from 'next/link'
+import { useFormik } from 'formik'
+
+interface FormProps{
+    name: string;
+    tags: string;
+    file: any;
+}
+
+const formScheme: FormProps = {name: '', tags: '', file: ''}
 
 export default function FormularioPage() {
+
+    const formik = useFormik<FormProps>({
+        initialValues: formScheme,
+        onSubmit: (dados:FormProps) => {
+            console.log(dados)
+        }
+    })
+
     return (
         <Template>
             <section className='flex flex-col items-center justify-center my-5'>
                 <h5 className='mt-3 mb-10 text-3xl font-extrabold tracking-tight text-slate-900'>Nova Imagem</h5>
-                <form>
+                <form onSubmit={formik.handleSubmit}>
                     <div className='grid grid-cols-1'>
                         <label className='block text-sm font-medium leading-6 text-gray-600'>Name: *</label>
-                        <InputText placeholder='type the name of the image'/>
+                        <InputText id='name' onChange={formik.handleChange} placeholder='type the name of the image'/>
                     </div>
 
                     <div className=' mt-5 grid grid-cols-1'>
-                        <label className='block text-sm font-medium leading-6 text-gray-600'>Name: *</label>
-                        <InputText placeholder='type the name of the tag'/>
+                        <label className='block text-sm font-medium leading-6 text-gray-600'>Tags: *</label>
+                        <InputText id='tags' onChange={formik.handleChange} placeholder='type the name of the tag'/>
                     </div>
 
                     <div className='mt-5 grid grid-cols-1'>
@@ -35,6 +55,13 @@ export default function FormularioPage() {
                                         </div>
                          </div>
                       </div>
+                    </div>
+
+                    <div className='mt-6 flex items-center justify-end gap-x-6'>
+                     <Button style='bg-blue-500 hover:bg-blue-300' type='submit' label='Save'/>
+                     <Link href='/galeria'>
+                         <Button style='bg-red-500 hover:bg-red-300' type='button' label='Cancelar'/>
+                     </Link>
                     </div>
                 </form>
             </section>
