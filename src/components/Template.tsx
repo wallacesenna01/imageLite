@@ -36,6 +36,17 @@ const Header: React.FC = () => {
     )
 }
 
+interface RenderIfProps {
+  condition?: boolean
+  children: React.ReactNode
+}
+
+export const RenderIf: React.FC<RenderIfProps> = ({condition=true, children}) => {
+  if(condition){
+    return children
+  }
+}
+
 const Footer: React.FC = () => {
     return(
         <footer className="bg-indigo-950 text-white py-4 mt-8">
