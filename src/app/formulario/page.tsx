@@ -1,6 +1,6 @@
 'use client'
 
-import { InputText, Button, useNotification } from '@/components'
+import { InputText, Button, useNotification, FieldError } from '@/components'
 import { Template, RenderIf } from '@/components/Template'
 import { useImageService } from '@/resources/image/image.service'
 import Link from 'next/link'
@@ -58,7 +58,7 @@ export default function FormularioPage() {
                         <InputText id='name' onChange={formik.handleChange}
                         value={formik.values.name}
                          placeholder='type the name of the image'/>
-                         <span className='text-red-500'>{formik.errors.name}</span>
+                         <FieldError error={formik.errors.name}/>
                     </div>
 
                     <div className=' mt-5 grid grid-cols-1'>
@@ -66,12 +66,12 @@ export default function FormularioPage() {
                         <InputText id='tags' onChange={formik.handleChange}
                          value={formik.values.tags}
                          placeholder='type the name of the tag'/>
-                         <span className='text-red-500'>{formik.errors.tags}</span>
+                           <FieldError error={formik.errors.tags}/>
                     </div>
 
                     <div className='mt-5 grid grid-cols-1'>
                       <label className='block text-sm font-medium leading-6 text-gray-600'>Image: *</label>
-                      <span className='text-red-500'>{formik.errors.file}</span>
+                      <FieldError error={formik.errors.file}/>
                       <div className='mt-2 flex justify-center rounded-lg border border-dahsed borde-gray-900/25 px-6 py-10'>
                          <div className='text-center'>
 
