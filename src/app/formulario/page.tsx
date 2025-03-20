@@ -1,19 +1,14 @@
 'use client'
 
-import { InputText, Button } from '@/components'
+import { InputText, Button, useNotification } from '@/components'
 import { Template, RenderIf } from '@/components/Template'
 import { useImageService } from '@/resources/image/image.service'
 import Link from 'next/link'
 import { useFormik } from 'formik'
 import { useState } from 'react'
+import { FormProps, formScheme, formValidationScheme } from './formScheme'
 
-interface FormProps{
-    name: string;
-    tags: string;
-    file: any;
-}
 
-const formScheme: FormProps = {name: '', tags: '', file: ''}
 
 
 
@@ -23,10 +18,12 @@ export default function FormularioPage() {
     const [loading, setLoading] = useState<boolean>();
     const [imagePreview, setImagePreview] = useState<string>();
     const service = useImageService();
+    const notification = useNotification();
 
     const formik = useFormik<FormProps>({
         initialValues: formScheme,
-        onSubmit: handleSubmit
+        onSubmit: handleSubmit,
+        validationSchema: formValidationScheme
     })
 
      async  function handleSubmit (dados: FormProps) {
@@ -39,6 +36,7 @@ export default function FormularioPage() {
         formik.resetForm();
         setImagePreview('');
         setLoading(false);
+        notification.notify('Upload enviado com sucesso', "success")
     }
 
     function onFileUpload(event: React.ChangeEvent<HTMLInputElement>) {
@@ -60,6 +58,7 @@ export default function FormularioPage() {
                         <InputText id='name' onChange={formik.handleChange}
                         value={formik.values.name}
                          placeholder='type the name of the image'/>
+                         <span className='text-red-500'>{formik.errors.name}</span>
                     </div>
 
                     <div className=' mt-5 grid grid-cols-1'>
@@ -67,6 +66,7 @@ export default function FormularioPage() {
                         <InputText id='tags' onChange={formik.handleChange}
                          value={formik.values.tags}
                          placeholder='type the name of the tag'/>
+                         <span className='text-red-500'>{formik.errors.tags}</span>
                     </div>
 
                     <div className='mt-5 grid grid-cols-1'>

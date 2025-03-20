@@ -1,3 +1,4 @@
+import { ToastContainer } from 'react-toastify';
 
 interface TemplateProps {
     children: React.ReactNode
@@ -21,6 +22,13 @@ export const Template: React.FC<TemplateProps> = ({
           {!loading && children}
         </div>
         <Footer />
+        <ToastContainer position={'top-right'}
+                        autoClose={8000}
+                        hideProgressBar={false}
+                        draggable={false}
+                        closeOnClick={true}
+                        pauseOnHover={true}       
+        />
       </>
     );
   };
@@ -41,11 +49,10 @@ interface RenderIfProps {
   children: React.ReactNode
 }
 
-export const RenderIf: React.FC<RenderIfProps> = ({condition=true, children}) => {
-  if(condition){
-    return children
-  }
-}
+export const RenderIf: React.FC<RenderIfProps> = ({ condition = true, children }) => {
+  return condition ? <>{children}</> : null;
+};
+
 
 const Footer: React.FC = () => {
     return(
