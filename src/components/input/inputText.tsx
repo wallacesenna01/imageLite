@@ -1,4 +1,5 @@
 import React from "react"
+import { StringSchema } from "yup";
 
 interface InputTextProps {
     style?: string;
@@ -6,11 +7,12 @@ interface InputTextProps {
     placeholder?: string;
     id?: string;
     value?: string
+    type?: string
 }
 
-export const InputText: React.FC<InputTextProps> = ({style, ...outrasProps} : InputTextProps) => {
+export const InputText: React.FC<InputTextProps> = ({style, type = "text",   ...outrasProps} : InputTextProps) => {
     return(
-       <input type="text" 
+       <input type={type}
           {...outrasProps}
           className={`${style} border px-3 py-2 rounded-lg text-gray-900`}/>
     )
