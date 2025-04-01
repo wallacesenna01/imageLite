@@ -1,7 +1,12 @@
 'use client'
 
-import { useState } from 'react';
-import { Template, RenderIf, InputText, Button } from '@/components';
+import { use, useState } from 'react';
+import { Template, RenderIf, InputText, Button, FieldError, useNotification } from '@/components';
+import { LoginForm, formScheme, validationScheme} from './formScheme'
+import {useFormik} from 'formik'
+import {useAuth} from '@/resources'
+import {useRouter} from 'next/navigation'
+import { AccessToken, Credentials, User } from '@/resources/user/user.resource';
 
 
 export default function LoginPage() {
@@ -9,6 +14,45 @@ export default function LoginPage() {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [newUseState, setNewUserState] = useState<boolean>(false)
+
+  const auth = useAuth();
+  const notification = useNotification();
+  const router = useRouter();
+
+
+  const {values, handleChange, handleSubmit, errors, resetForm} = useFormik<LoginForm>({
+    initialValues: formScheme,
+    validationSchema: validationScheme,
+    onSubmit: onSubmit
+  })
+
+  async function onSubmit(values: LoginForm) {
+      if(!newUseState) {
+        const credentials: Credentials = {email: values.email, password: values.password}
+        try {
+             const acessToken: AccessToken = await auth.authenticate(credentials);
+             auth.initSession(acessToken);
+             console.log("sessão exta valida ?", auth.isSessionValid());
+             router.push("/galeria")
+
+        } catch (error: any) {
+           const message = error?.message;
+           notification.notify(message, "error")
+        }
+      }else {
+        const user: User = {email: values.email, name: values.name, password: values.password }
+        try {
+             await auth.save(user)
+             notification.notify("Sucesso ao salvar o usuario", "success")
+             resetForm();
+             setNewUserState(false);
+        }catch(error: any) {
+
+          const message = error?.message;
+          notification.notify(message, "error")
+        }
+      }
+  }
 
   return (
     <Template loading={loading}>
@@ -23,14 +67,17 @@ export default function LoginPage() {
         </div>
 
         <div className='mt-10 sm:mx-auto sm:w-full sm:max-w-sm'>
-          <form className='space-y-6'>
+          <form onSubmit={handleSubmit} className='space-y-6'>
             <RenderIf condition={newUseState}>
                  <div >
                     <label className='block text-sm font-medium leading-6 text-gray-900'>Name: </label>                  
                  </div>
                  <div className='mt-2'>
                      <InputText style='w-full'
-                                id='name'/>                   
+                                id='name'
+                                value={values.name}
+                                onChange={handleChange}/> 
+                      <FieldError error={errors.name}/>                  
                  </div>             
             </RenderIf>
             <div >
@@ -38,7 +85,10 @@ export default function LoginPage() {
                  </div>
                  <div className='mt-2'>
                      <InputText style='w-full'
-                                id='email'/>  
+                                id='email'
+                                value={values.email}
+                                onChange={handleChange}/>
+                    <FieldError error={errors.email} />  
                 </div>
 
                 <div >
@@ -47,7 +97,10 @@ export default function LoginPage() {
                  <div className='mt-2'>
                      <InputText style='w-full'
                                 type='password'
-                                id='password'/>  
+                                id='password'
+                                value={values.password}
+                                onChange={handleChange}/>
+                    <FieldError error={errors.password}/> 
                 </div>
 
                 <RenderIf condition={newUseState}>
@@ -57,7 +110,10 @@ export default function LoginPage() {
                  <div className='mt-2'>
                      <InputText style='w-full'
                                 type='password'
-                                id='passwordMatch'/>  
+                                id='passwordMatch'
+                                value={values.passwordMatch}
+                                onChange={handleChange}/>
+                      <FieldError error={errors.passwordMatch}/>  
                 </div>
                 </RenderIf>
 
