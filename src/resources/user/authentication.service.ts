@@ -40,14 +40,10 @@ class AuthService {
 
     initSession(token: AccessToken){
  
-        console.log("funcao init foi chamada")
-
         if(token.accessToken){
-            console.log("Token recebido:", token.accessToken);
-            const decodedToken: any = jwt(token.accessToken);
-
-            console.log("DECODED TOKEN:", decodedToken);
           
+            const decodedToken: any = jwt(token.accessToken);
+                    
             const userSessionToken: UserSessionToken = {
                 accessToken: token.accessToken,
                 email: decodedToken.sub,

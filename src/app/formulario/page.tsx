@@ -1,6 +1,6 @@
 'use client'
 
-import { InputText, Button, useNotification, FieldError } from '@/components'
+import { InputText, Button, useNotification, FieldError, AuthenticatedPage } from '@/components'
 import { Template, RenderIf } from '@/components/Template'
 import { useImageService } from '@/resources/image/image.service'
 import Link from 'next/link'
@@ -49,6 +49,7 @@ export default function FormularioPage() {
     }
 
     return (
+        <AuthenticatedPage>
         <Template loading={loading}>
             <section className='flex flex-col items-center justify-center my-5'>
                 <h5 className='mt-3 mb-10 text-3xl font-extrabold tracking-tight text-slate-900'>Nova Imagem</h5>
@@ -109,5 +110,6 @@ export default function FormularioPage() {
                 </form>
             </section>
         </Template>
+        </AuthenticatedPage>
     )
 }
