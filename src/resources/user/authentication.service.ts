@@ -87,6 +87,10 @@ class AuthService {
         return false;
     }
 
+    invalidateSession() : void {
+        localStorage.removeItem(AuthService.AUTH_PATHM);
+    }
+
   
 }
 
