@@ -1,3 +1,5 @@
+'use client'
+
 import { ToastContainer } from 'react-toastify';
 import Link from 'next/link'
 import {useAuth} from '@/resources'
